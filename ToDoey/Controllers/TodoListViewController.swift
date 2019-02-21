@@ -99,7 +99,6 @@ class TodoListViewController: UITableViewController{
         }
 
         alert.addAction(action)
-
             self.present(alert, animated: true, completion: nil)
     }
     
@@ -113,10 +112,9 @@ class TodoListViewController: UITableViewController{
         
         self.tableView.reloadData()
     }
-    
-//MARK: - Search bar Methods
-
 }
+
+//MARK: - Search bar Methods
 
 extension TodoListViewController : UISearchBarDelegate {
     

@@ -8,10 +8,10 @@
 
 import UIKit
 import RealmSwift
+import SwipeCellKit
 
 
-
-class CategoryViewController: UITableViewController {
+class CategoryViewController:SwipeViewController {
     
     let realm = try! Realm()
     
@@ -24,6 +24,8 @@ class CategoryViewController: UITableViewController {
         
         loadItem()
 
+        tableView.rowHeight = 80.0
+        
     }
     // MARK: - TableView Datasource Methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -32,7 +34,7 @@ class CategoryViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         cell.textLabel?.text = categories?[indexPath.row].name ?? "まだカテゴリーがありません"
         
@@ -74,6 +76,21 @@ class CategoryViewController: UITableViewController {
         tableView.reloadData()
     }
 
+    //MARK: - Delete Data from Swipe
+    
+    override func updateModel(at indexPath: IndexPath) {
+        
+        if let categoryFromDeletion = categories?[indexPath.row]{
+            do{
+                try realm.write {
+                    realm.delete(categoryFromDeletion)
+                }
+            } catch {
+                print("Error deleting data, \(error)")
+            }
+        }
+    }
+    
     //MARK: - Add New Category
 
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
