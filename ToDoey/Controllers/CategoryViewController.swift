@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 import SwipeCellKit
-
+import ChameleonFramework
 
 class CategoryViewController:SwipeViewController {
     
@@ -23,9 +23,7 @@ class CategoryViewController:SwipeViewController {
         super.viewDidLoad()
         
         loadItem()
-
-        tableView.rowHeight = 80.0
-        
+                
     }
     // MARK: - TableView Datasource Methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -36,8 +34,18 @@ class CategoryViewController:SwipeViewController {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "まだカテゴリーがありません"
-        
+        if let category = categories?[indexPath.row] {
+            
+            cell.textLabel?.text = category.name
+            guard let categoryColour = UIColor(hexString: category.colour) else {fatalError()}
+            cell.backgroundColor = categoryColour
+            cell.textLabel?.textColor = ContrastColorOf(categoryColour, returnFlat: true)
+        } else {
+            cell.textLabel?.text = "まだカテゴリーがありません"
+            
+            cell.backgroundColor = UIColor(hexString: "21C7FF")
+            
+        }
         return cell
     }
     
@@ -103,6 +111,7 @@ class CategoryViewController:SwipeViewController {
             
             let newCategory = Category()
             newCategory.name = textField.text!
+            newCategory.colour = UIColor.randomFlat.hexValue()
             self.save(category: newCategory)
             
         }
